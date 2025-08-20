@@ -76,7 +76,6 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle>محاسبه‌گر دوز شربت</CardTitle>
         <CardDescription>برای محاسبه دوز و مشاهده هشدارها، جزئیات زیر را وارد کنید.</CardDescription>
       </CardHeader>
       <CardContent>
@@ -96,7 +95,10 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                           role="combobox"
                           className={cn("w-full justify-between", !field.value && "text-muted-foreground")}
                         >
-                          <span className={cn("flex-1", field.value ? "text-left" : "text-right")} dir={field.value ? "ltr" : "rtl"}>
+                          <span 
+                            className={cn("flex-1", !field.value ? "text-right" : "text-left")}
+                            dir={!field.value ? "rtl" : "ltr"}
+                          >
                             {field.value
                               ? medicineLibrary.find((med) => med.name === field.value)?.name
                               : "انتخاب دارو"}
@@ -160,12 +162,15 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                    <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value} disabled={!selectedMedicine}>
                     <FormControl>
                       <SelectTrigger dir="rtl">
-                         <SelectValue placeholder={!selectedMedicine ? "ابتدا یک دارو انتخاب کنید" : ""} />
+                         <SelectValue 
+                            placeholder={!selectedMedicine ? "ابتدا یک دارو انتخاب کنید" : ""}
+                            className={cn(!field.value && "text-right")}
+                          />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent dir="rtl">
                       {selectedMedicine?.concentrations.map((concentration) => (
-                        <SelectItem key={concentration} value={concentration} dir="rtl" className="text-right">
+                        <SelectItem key={concentration} value={concentration}>
                           {concentration}
                         </SelectItem>
                       ))}

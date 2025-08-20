@@ -166,7 +166,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                   <FormLabel>غلظت شربت</FormLabel>
                    <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value} disabled={!selectedMedicine}>
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger dir="rtl">
                         <SelectValue placeholder="ابتدا یک دارو انتخاب کنید" />
                       </SelectTrigger>
                     </FormControl>

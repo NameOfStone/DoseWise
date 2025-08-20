@@ -24,6 +24,7 @@ const formSchema = z.object({
   patientWeight: z.coerce.number().positive({ message: "وزن باید مثبت باشد." }),
   patientWeightUnit: z.enum(["kg", "lbs"]),
   dosageGuidelines: z.string().min(10, { message: "راهنمای دوز مورد نیاز است." }),
+  syrupConcentration: z.string().min(3, { message: "غلظت شربت الزامی است." }),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -44,6 +45,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
       patientWeight: 0,
       patientWeightUnit: "kg",
       dosageGuidelines: "",
+      syrupConcentration: "",
     },
     values: loadData, // Use values to sync with parent state
   });
@@ -60,6 +62,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
         medicineName: values.medicineName,
         patientWeight: parseFloat(weightInKg.toFixed(2)),
         dosageGuidelines: values.dosageGuidelines,
+        syrupConcentration: values.syrupConcentration,
       };
 
       const aiResponse = await checkInteractionWarning(aiInput);
@@ -80,7 +83,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle>محاسبه‌گر دوز</CardTitle>
+        <CardTitle>محاسبه‌گر دوز شربت</CardTitle>
         <CardDescription>برای بررسی دوز و هشدارها، جزئیات زیر را وارد کنید.</CardDescription>
       </CardHeader>
       <CardContent>
@@ -119,6 +122,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                               onSelect={() => {
                                 form.setValue("medicineName", med.name);
                                 form.setValue("dosageGuidelines", med.guidelines);
+                                form.setValue("syrupConcentration", med.concentration || "");
                                 setPopoverOpen(false);
                               }}
                             >
@@ -163,6 +167,22 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                       )}
                     />
                   </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="syrupConcentration"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>غلظت شربت</FormLabel>
+                  <FormControl>
+                    <Input placeholder="مثلا 100 mg / 5 ml" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    غلظت ماده موثره در شربت را وارد کنید.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

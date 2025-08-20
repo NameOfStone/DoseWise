@@ -4,7 +4,7 @@ import type { CalculationResult, SavedCalculation } from "@/lib/types";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, CheckCircle2, Pill, Scale, Stethoscope, Beaker } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Pill, Scale, Stethoscope, Beaker, FlaskConical } from "lucide-react";
 
 interface DosageDisplayProps {
   result: CalculationResult | null;
@@ -43,11 +43,13 @@ export function DosageDisplay({ result, onSave, isSaved }: DosageDisplayProps) {
             <h3 className="font-semibold text-lg">ورودی‌ها</h3>
             <div className="flex items-center gap-2 text-sm"><Pill className="h-4 w-4 text-primary" /> دارو: {inputs.medicineName}</div>
             <div className="flex items-center gap-2 text-sm"><Scale className="h-4 w-4 text-primary" /> وزن بیمار: {inputs.patientWeight} {inputs.patientWeightUnit}</div>
+            <div className="flex items-center gap-2 text-sm"><FlaskConical className="h-4 w-4 text-primary" /> غلظت: {inputs.syrupConcentration}</div>
         </div>
         
         <div className="space-y-2">
-            <h3 className="font-semibold text-lg">دوز</h3>
-            <div className="flex items-center gap-2 text-lg font-bold text-primary"><Beaker className="h-5 w-5" /> {aiResponse.calculatedDose}</div>
+            <h3 className="font-semibold text-lg">نتایج محاسبه شده</h3>
+            <div className="flex items-center gap-2 text-md"><Beaker className="h-5 w-5" /> دوز (mg): {aiResponse.calculatedDose}</div>
+            <div className="flex items-center gap-2 text-lg font-bold text-primary"><Beaker className="h-5 w-5" /> حجم (ml): {aiResponse.calculatedVolume}</div>
         </div>
 
         {aiResponse.hasWarning ? (

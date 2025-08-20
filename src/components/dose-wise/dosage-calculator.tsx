@@ -151,7 +151,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                 <FormItem>
                   <FormLabel>وزن بیمار (کیلوگرم)</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="مثلاً ۱۲.۵" {...field} />
+                    <Input type="number" dir="ltr" className="text-right" placeholder="مثلاً ۱۲.۵" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

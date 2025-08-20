@@ -103,22 +103,26 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                           role="combobox"
                           className={cn("w-full justify-between", !field.value && "text-muted-foreground")}
                         >
-                          {field.value
-                            ? medicineLibrary.find((med) => med.name === field.value)?.name
-                            : "انتخاب دارو"}
+                          <span className="text-left flex-1" dir="ltr">
+                            {field.value
+                              ? medicineLibrary.find((med) => med.name === field.value)?.name
+                              : "انتخاب دارو"}
+                          </span>
                           <Pill className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
                     <PopoverContent className="w-full p-0" align="start">
                       <Command>
-                        <CommandInput placeholder="جستجوی دارو..." onValueChange={(search) => { form.setValue('medicineName', search); }} />
+                        <CommandInput placeholder="جستجوی دارو..." onValueChange={(search) => { form.setValue('medicineName', search); }} dir="ltr" />
                         <CommandEmpty>دارویی یافت نشد.</CommandEmpty>
                         <CommandGroup>
                           {medicineLibrary.map((med) => (
                             <CommandItem
                               value={med.name}
                               key={med.name}
+                              className="text-left"
+                              dir="ltr"
                               onSelect={() => {
                                 form.setValue("medicineName", med.name);
                                 form.setValue("dosageGuidelines", med.guidelines);
@@ -127,7 +131,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                                 setPopoverOpen(false);
                               }}
                             >
-                              <Check className={cn("mr-2 h-4 w-4", med.name === field.value ? "opacity-100" : "opacity-0")} />
+                              <Check className={cn("ml-2 h-4 w-4", med.name === field.value ? "opacity-100" : "opacity-0")} />
                               {med.name}
                             </CommandItem>
                           ))}

@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { CalculationData, CalculationResult } from "@/lib/types";
-import { checkInteractionWarning } from "@/ai/flows/interaction-warning";
+import { calculateOffline } from "@/lib/medicines";
 import { useState, useEffect } from "react";
 import { Loader2, Pill } from "lucide-react";
 import { medicineLibrary } from "@/lib/medicines";
@@ -58,19 +58,14 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
 
   async function onSubmit(values: FormValues) {
     setIsLoading(true);
+    // Simulate a short delay for user feedback
+    await new Promise(resolve => setTimeout(resolve, 300));
     try {
-      const aiInput = {
-        medicineName: values.medicineName,
-        patientWeight: values.patientWeight,
-        dosageGuidelines: values.dosageGuidelines,
-        syrupConcentration: values.syrupConcentration,
-      };
-
-      const aiResponse = await checkInteractionWarning(aiInput);
+      const calculationResult = calculateOffline(values);
       
       onCalculate({
         inputs: values,
-        aiResponse,
+        aiResponse: calculationResult,
       });
 
     } catch (error) {
@@ -84,7 +79,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
     <Card className="h-full">
       <CardHeader>
         <CardTitle>محاسبه‌گر دوز شربت</CardTitle>
-        <CardDescription>برای بررسی دوز و هشدارها، جزئیات زیر را وارد کنید.</CardDescription>
+        <CardDescription>برای محاسبه دوز و مشاهده هشدارها، جزئیات زیر را وارد کنید.</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -167,7 +162,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                    <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value} disabled={!selectedMedicine}>
                     <FormControl>
                       <SelectTrigger dir="rtl">
-                        <SelectValue placeholder="ابتدا یک دارو انتخاب کنید" />
+                         <SelectValue placeholder={!selectedMedicine ? "ابتدا یک دارو انتخاب کنید" : ""} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent dir="rtl">

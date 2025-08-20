@@ -1,6 +1,6 @@
 export interface CalculationData {
   medicineName: string;
-  patientWeight: number;
+  patientWeight: number | "";
   dosageGuidelines: string;
   syrupConcentration: string;
   disease: string;

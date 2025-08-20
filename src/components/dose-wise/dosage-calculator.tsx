@@ -26,8 +26,13 @@ const formSchema = z.object({
   patientWeight: z.union([z.coerce.number().positive({ message: "وزن باید مثبت باشد." }), z.literal("")]),
   dosageGuidelines: z.string().min(1, { message: "راهنمای دوز مورد نیاز است." }),
   notes: z.string(),
-}).refine(data => data.patientWeight !== "", {
-    message: "وزن بیمار الزامی است.",
+}).refine(data => {
+    const selectedMedicine = medicineLibrary.find(med => med.name === data.medicineName);
+    const isWeightBased = selectedMedicine?.diseases.some(d => d.guidelines.includes("به ازای هر کیلوگرم"));
+    // If it's weight-based, patientWeight is required. Otherwise, it's optional.
+    return !isWeightBased || data.patientWeight !== "";
+}, {
+    message: "وزن بیمار برای این دارو الزامی است.",
     path: ["patientWeight"],
 });
 
@@ -39,9 +44,9 @@ interface DosageCalculatorProps {
   loadData?: CalculationData | null;
 }
 
-const toPersianNumerals = (text: string | number) => {
+const toPersianNumerals = (text: string | number | undefined | null) => {
     if (text === null || text === undefined) return "";
-    return String(text).replace(/[0-9]/g, (w) => "۰۱۲۳۴۵۶۷۸۹"[+w]);
+    return String(text).replace(/[0-9.]/g, (w) => "۰۱۲۳۴۵۶۷۸۹."[w as any]);
 };
 
 
@@ -71,6 +76,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
   const selectedMedicine = medicineLibrary.find(med => med.name === selectedMedicineName);
   const selectedDiseaseName = form.watch("disease");
   const selectedDisease = selectedMedicine?.diseases.find(d => d.name === selectedDiseaseName);
+  const isWeightBased = selectedMedicine?.diseases.some(d => d.guidelines.includes("به ازای هر کیلوگرم"));
 
   useEffect(() => {
     if (selectedMedicine) {
@@ -104,13 +110,11 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
 
 
   async function onSubmit(values: FormValues) {
-    if (values.patientWeight === "") return;
-
     setIsLoading(true);
     try {
       const aiResponse = await getInteractionWarning({
           medicineName: values.medicineName,
-          patientWeight: values.patientWeight as number,
+          patientWeight: values.patientWeight,
           dosageGuidelines: values.dosageGuidelines,
           syrupConcentration: values.syrupConcentration,
           disease: values.disease,
@@ -118,7 +122,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
       });
       
       onCalculate({
-        inputs: { ...values, patientWeight: values.patientWeight as number },
+        inputs: { ...values },
         aiResponse,
       });
 
@@ -130,8 +134,15 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
   }
   
   const toEnglishNumerals = (str: string) => {
+    if (!str) return "";
     return str.replace(/[۰-۹]/g, d => String.fromCharCode(d.charCodeAt(0) - 1728));
   }
+
+  const formatPersianNumberInput = (value: string | number) => {
+    if (value === null || value === undefined) return "";
+    return String(value).replace(/[0-9]/g, w => "۰۱۲۳۴۵۶۷۸۹"[+w]);
+  };
+
 
   return (
     <Card className="h-full">
@@ -156,8 +167,8 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                           className={cn("w-full justify-between", !field.value && "text-muted-foreground")}
                         >
                           <span 
-                            className={cn("flex-1", !field.value ? "text-right" : "text-left")}
-                            dir={!field.value ? "rtl" : "ltr"}
+                            className="flex-1 text-left"
+                            dir="ltr"
                           >
                             {field.value
                               ? medicineLibrary.find((med) => med.name === field.value)?.name
@@ -180,6 +191,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                               dir="ltr"
                               onSelect={() => {
                                 form.setValue("medicineName", med.name);
+                                form.clearErrors(); // Clear errors to re-evaluate based on new selections
                                 setPopoverOpen(false);
                               }}
                             >
@@ -206,17 +218,16 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                     <FormControl>
                       <SelectTrigger dir="rtl">
                          <SelectValue 
-                            placeholder={!selectedMedicine ? "ابتدا یک دارو انتخاب کنید" : ""}
-                            className={cn(!field.value && "text-right")}
+                            placeholder={!selectedMedicine ? "ابتدا یک دارو انتخاب کنید" : "انتخاب غلظت"}
                           >
-                            {toPersianNumerals(field.value)}
+                            {formatPersianNumberInput(field.value)}
                          </SelectValue>
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent dir="rtl">
                       {selectedMedicine?.concentrations.map((concentration) => (
                         <SelectItem key={concentration} value={concentration} className="text-right" dir="rtl">
-                          {toPersianNumerals(concentration)}
+                          {formatPersianNumberInput(concentration)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -237,7 +248,6 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                       <SelectTrigger dir="rtl">
                          <SelectValue 
                             placeholder={!selectedMedicine ? "ابتدا یک دارو انتخاب کنید" : "انتخاب بیماری"}
-                            className={cn(!field.value && "text-right")}
                           />
                       </SelectTrigger>
                     </FormControl>
@@ -254,31 +264,34 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="patientWeight"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>وزن بیمار (کیلوگرم)</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="text"
-                      dir="rtl"
-                      placeholder="مثلاً ۱۲.۵"
-                      {...field}
-                      value={toPersianNumerals(field.value)}
-                      onChange={(e) => {
-                         const englishValue = toEnglishNumerals(e.target.value);
-                         if (!isNaN(Number(englishValue)) || englishValue === "" || englishValue === ".") {
-                            form.setValue("patientWeight", englishValue);
-                         }
-                      }}
-                     />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {isWeightBased && (
+                <FormField
+                control={form.control}
+                name="patientWeight"
+                render={({ field }) => (
+                    <FormItem>
+                    <FormLabel>وزن بیمار (کیلوگرم)</FormLabel>
+                    <FormControl>
+                        <Input
+                        type="text"
+                        dir="rtl"
+                        placeholder="مثلاً ۱۲.۵"
+                        {...field}
+                        value={formatPersianNumberInput(field.value)}
+                        onChange={(e) => {
+                            const englishValue = toEnglishNumerals(e.target.value);
+                            // Allow only numbers and a single decimal point
+                            if (/^\d*\.?\d*$/.test(englishValue)) {
+                                form.setValue("patientWeight", englishValue);
+                            }
+                        }}
+                        />
+                    </FormControl>
+                    <FormMessage />
+                    </FormItem>
+                )}
+                />
+            )}
             
             <FormField
               control={form.control}
@@ -289,10 +302,10 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                   <FormControl>
                     <Textarea
                       placeholder="دستورالعمل دوز پس از انتخاب دارو و بیماری نمایش داده می‌شود."
-                      className="resize-none"
+                      className="resize-none whitespace-pre-wrap"
                       rows={5}
                       {...field}
-                      value={toPersianNumerals(field.value)}
+                      value={formatPersianNumberInput(field.value)}
                       readOnly
                     />
                   </FormControl>
@@ -305,7 +318,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
             />
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-              محاسبه دوز
+              محاسبه و نمایش نکات
             </Button>
           </form>
         </Form>

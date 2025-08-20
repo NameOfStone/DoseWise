@@ -9,10 +9,10 @@ interface DosageDisplayProps {
   result: CalculationResult | null;
 }
 
-const toPersianNumerals = (text: string | number) => {
-    if (text === null || text === undefined) return "";
-    const persianNumerals = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
-    return String(text).replace(/[0-9]/g, (w) => persianNumerals[+w]);
+const toPersianNumerals = (text: string | number | undefined | null) => {
+  if (text === null || text === undefined) return "";
+  const persianNumerals = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+  return String(text).replace(/[0-9]/g, (w) => persianNumerals[+w]);
 };
 
 
@@ -35,6 +35,7 @@ export function DosageDisplay({ result }: DosageDisplayProps) {
   }
 
   const { inputs, aiResponse } = result;
+  const isAgeBased = !aiResponse.calculatedDose && !aiResponse.calculatedVolume;
 
   return (
     <Card className="h-full flex flex-col">
@@ -48,19 +49,23 @@ export function DosageDisplay({ result }: DosageDisplayProps) {
             <div className="flex items-center gap-2 text-sm"><Pill className="h-4 w-4 text-primary" /> دارو: {inputs.medicineName}</div>
             <div className="flex items-center gap-2 text-sm"><FlaskConical className="h-4 w-4 text-primary" /> غلظت: {toPersianNumerals(inputs.syrupConcentration)}</div>
             <div className="flex items-center gap-2 text-sm"><Activity className="h-4 w-4 text-primary" /> بیماری: {inputs.disease}</div>
-            <div className="flex items-center gap-2 text-sm"><Scale className="h-4 w-4 text-primary" /> وزن بیمار: {toPersianNumerals(inputs.patientWeight)} کیلوگرم</div>
+            {inputs.patientWeight ? (
+              <div className="flex items-center gap-2 text-sm"><Scale className="h-4 w-4 text-primary" /> وزن بیمار: {toPersianNumerals(inputs.patientWeight)} کیلوگرم</div>
+            ) : null}
         </div>
         
-        <div className="space-y-2">
-            <h3 className="font-semibold text-lg">نتایج محاسبه شده</h3>
-            <div className="flex items-center gap-2 text-md"><Beaker className="h-5 w-5" /> دوز: {toPersianNumerals(aiResponse.calculatedDose)} ({toPersianNumerals(aiResponse.frequency)})</div>
-            <div className="flex items-center gap-2 text-lg font-bold text-primary"><Beaker className="h-5 w-5" /> حجم: {toPersianNumerals(aiResponse.calculatedVolume)} ({toPersianNumerals(aiResponse.frequency)})</div>
-        </div>
+        {!isAgeBased && (
+            <div className="space-y-2">
+                <h3 className="font-semibold text-lg">نتایج محاسبه شده</h3>
+                <div className="flex items-center gap-2 text-md"><Beaker className="h-5 w-5" /> دوز: {toPersianNumerals(aiResponse.calculatedDose)} ({toPersianNumerals(aiResponse.frequency)})</div>
+                <div className="flex items-center gap-2 text-lg font-bold text-primary"><Beaker className="h-5 w-5" /> حجم: {toPersianNumerals(aiResponse.calculatedVolume)} ({toPersianNumerals(aiResponse.frequency)})</div>
+            </div>
+        )}
         
         <Alert className="bg-accent/50 border-accent">
           <Info className="h-4 w-4 text-accent-foreground" />
-          <AlertTitle>نکات مهم دارویی</AlertTitle>
-          <AlertDescription>{toPersianNumerals(aiResponse.notes)}</AlertDescription>
+          <AlertTitle>نکات و دستورالعمل</AlertTitle>
+          <AlertDescription className="whitespace-pre-wrap">{toPersianNumerals(aiResponse.notes)}</AlertDescription>
         </Alert>
 
       </CardContent>

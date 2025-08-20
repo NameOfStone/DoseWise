@@ -3,16 +3,13 @@
 import type { CalculationResult } from "@/lib/types";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
 import { AlertTriangle, CheckCircle2, Pill, Scale, Stethoscope, Beaker, FlaskConical } from "lucide-react";
 
 interface DosageDisplayProps {
   result: CalculationResult | null;
-  onSave: (result: CalculationResult) => void;
-  isSaved: (result: CalculationResult) => boolean;
 }
 
-export function DosageDisplay({ result, onSave, isSaved }: DosageDisplayProps) {
+export function DosageDisplay({ result }: DosageDisplayProps) {
   if (!result) {
     return (
       <Card className="h-full">
@@ -66,11 +63,6 @@ export function DosageDisplay({ result, onSave, isSaved }: DosageDisplayProps) {
           </Alert>
         )}
       </CardContent>
-      <CardFooter>
-        <Button onClick={() => onSave(result)} disabled={isSaved(result)} className="w-full">
-          {isSaved(result) ? "محاسبه ذخیره شد" : "ذخیره محاسبه"}
-        </Button>
-      </CardFooter>
     </Card>
   );
 }

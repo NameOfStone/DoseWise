@@ -8,8 +8,3 @@ export interface CalculationResult {
   inputs: CalculationData;
   aiResponse: CheckInteractionWarningOutput;
 }
-
-export interface SavedCalculation extends CalculationResult {
-  id: string;
-  createdAt: string;
-}

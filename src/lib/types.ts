@@ -9,9 +9,9 @@ export interface CalculationData {
 
 export interface AIResponse {
   notes: string;
-  calculatedDose: string;
-  calculatedVolume: string;
-  frequency: string;
+  calculatedDose: string; // "۱۴۰ میلی‌گرم"
+  calculatedVolume: string; // "۴.۴ میلی‌لیتر"
+  frequency: string; // "هر ۶ ساعت"
 }
 
 export interface CalculationResult {

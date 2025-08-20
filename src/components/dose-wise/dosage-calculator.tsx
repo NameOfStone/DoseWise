@@ -251,7 +251,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                     />
                   </FormControl>
                   <FormDescription>
-                    این اطلاعات بر اساس داروی و بیماری انتخاب شده و از منابع معتبر است.
+                    این اطلاعات بر اساس دارو و بیماری انتخاب شده و از منابع معتبر است.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

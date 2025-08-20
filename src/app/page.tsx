@@ -68,7 +68,7 @@ export default function Home() {
             <h1 className="text-4xl md:text-5xl font-bold font-headline">محاسبه‌گر دوز داروی سافیرا</h1>
         </div>
         <p className="text-muted-foreground text-lg">
-          یک حسابگر هوشمند دوز دارو با هشدارهای تداخل دارویی.
+          یک حسابگر هوشمند دوز دارو با هشدارهای دارویی.
         </p>
       </header>
 

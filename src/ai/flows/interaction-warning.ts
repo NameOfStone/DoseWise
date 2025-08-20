@@ -1,9 +1,9 @@
 'use server';
 
 /**
- * @fileOverview An AI agent that checks for medicine interactions and warnings.
+ * @fileOverview An AI agent that checks for medicine warnings.
  *
- * - checkInteractionWarning - A function that checks medicine dosages and guidelines against known interactions and warnings.
+ * - checkInteractionWarning - A function that checks medicine dosages and guidelines against known warnings.
  * - CheckInteractionWarningInput - The input type for the checkInteractionWarning function.
  * - CheckInteractionWarningOutput - The return type for the checkInteractionWarning function.
  */
@@ -20,8 +20,8 @@ const CheckInteractionWarningInputSchema = z.object({
 export type CheckInteractionWarningInput = z.infer<typeof CheckInteractionWarningInputSchema>;
 
 const CheckInteractionWarningOutputSchema = z.object({
-  hasWarning: z.boolean().describe('Whether there is a potential interaction or warning.'),
-  warningMessage: z.string().describe('The message describing the interaction or warning, if any.'),
+  hasWarning: z.boolean().describe('Whether there is a potential warning.'),
+  warningMessage: z.string().describe('The message describing the warning, if any.'),
   calculatedDose: z.string().describe('The calculated dosage based on the patient\'s weight and guidelines. This could be a range in mg.'),
   calculatedVolume: z.string().describe('The calculated volume in ml based on the calculated dose and syrup concentration. This could be a range in ml.'),
 });
@@ -37,9 +37,9 @@ const interactionWarningPrompt = ai.definePrompt({
   name: 'interactionWarningPrompt',
   input: {schema: CheckInteractionWarningInputSchema},
   output: {schema: CheckInteractionWarningOutputSchema},
-  prompt: `You are a pharmacist specializing in identifying medicine interactions and warnings and calculating dosages for syrups.
+  prompt: `You are a pharmacist specializing in identifying medicine warnings and calculating dosages for syrups.
 
-You will be provided with the medicine name, patient weight, dosage guidelines, and syrup concentration. You will cross-reference this information against known interactions and warnings.
+You will be provided with the medicine name, patient weight, dosage guidelines, and syrup concentration. You will cross-reference this information against known warnings.
 
 Medicine Name: {{{medicineName}}}
 Patient Weight: {{{patientWeight}}} kg
@@ -48,7 +48,7 @@ Syrup Concentration: {{{syrupConcentration}}}
 
 Based on this information, first calculate the recommended dose in mg for the patient. The result should be a string and can be a range if the guidelines specify one (e.g., "140-210 mg"). 
 Then, using the calculated dose and the syrup concentration, calculate the corresponding volume in ml. The result should be a string and can be a range (e.g., "7-10.5 ml").
-Also, determine if there are any potential interactions or warnings. If there are, set the hasWarning field to true and provide a detailed warning message. If there are no warnings, set the hasWarning field to false and provide a message confirming no issues were found.
+Also, determine if there are any potential warnings. If there are, set the hasWarning field to true and provide a detailed warning message. If there are no warnings, set the hasWarning field to false and provide a message confirming no issues were found.
 `,
 });
 

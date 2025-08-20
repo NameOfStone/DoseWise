@@ -55,14 +55,14 @@ export function DosageDisplay({ result, onSave, isSaved }: DosageDisplayProps) {
         {aiResponse.hasWarning ? (
           <Alert variant="destructive">
             <AlertTriangle className="h-4 w-4" />
-            <AlertTitle>هشدار تداخل دارویی!</AlertTitle>
+            <AlertTitle>هشدار دارویی!</AlertTitle>
             <AlertDescription>{aiResponse.warningMessage}</AlertDescription>
           </Alert>
         ) : (
           <Alert className="bg-accent/50 border-accent">
             <CheckCircle2 className="h-4 w-4 text-accent-foreground" />
             <AlertTitle>هیچ هشداری یافت نشد</AlertTitle>
-            <AlertDescription>{aiResponse.warningMessage || "بر اساس اطلاعات ارائه شده، هیچ تداخل یا هشدار بالقوه‌ای یافت نشد."}</AlertDescription>
+            <AlertDescription>{aiResponse.warningMessage || "بر اساس اطلاعات ارائه شده، هیچ هشدار بالقوه‌ای یافت نشد."}</AlertDescription>
           </Alert>
         )}
       </CardContent>

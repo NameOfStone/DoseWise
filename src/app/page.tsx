@@ -56,7 +56,8 @@ export default function Home() {
       (saved) =>
         saved.inputs.medicineName === result.inputs.medicineName &&
         saved.inputs.patientWeight === result.inputs.patientWeight &&
-        saved.inputs.dosageGuidelines === result.inputs.dosageGuidelines
+        saved.inputs.dosageGuidelines === result.inputs.dosageGuidelines &&
+        saved.inputs.syrupConcentration === result.inputs.syrupConcentration
     );
   };
 

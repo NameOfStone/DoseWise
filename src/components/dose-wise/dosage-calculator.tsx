@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { CalculationData, CalculationResult } from "@/lib/types";
 import { checkInteractionWarning } from "@/ai/flows/interaction-warning";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Loader2, Pill } from "lucide-react";
 import { medicineLibrary } from "@/lib/medicines";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
@@ -22,7 +22,6 @@ import { Check } from "lucide-react";
 const formSchema = z.object({
   medicineName: z.string().min(2, { message: "نام دارو الزامی است." }),
   patientWeight: z.coerce.number().positive({ message: "وزن باید مثبت باشد." }),
-  patientWeightUnit: z.enum(["kg", "lbs"]),
   dosageGuidelines: z.string().min(10, { message: "راهنمای دوز مورد نیاز است." }),
   syrupConcentration: z.string().min(3, { message: "غلظت شربت الزامی است." }),
 });
@@ -40,15 +39,19 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: loadData || {
+    defaultValues: {
       medicineName: "",
       patientWeight: 0,
-      patientWeightUnit: "kg",
       dosageGuidelines: "",
       syrupConcentration: "",
     },
-    values: loadData,
   });
+
+  useEffect(() => {
+    if (loadData) {
+      form.reset(loadData);
+    }
+  }, [loadData, form]);
 
   const selectedMedicineName = form.watch("medicineName");
   const selectedMedicine = medicineLibrary.find(med => med.name === selectedMedicineName);
@@ -56,14 +59,9 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
   async function onSubmit(values: FormValues) {
     setIsLoading(true);
     try {
-      let weightInKg = values.patientWeight;
-      if (values.patientWeightUnit === "lbs") {
-        weightInKg = values.patientWeight / 2.20462;
-      }
-
       const aiInput = {
         medicineName: values.medicineName,
-        patientWeight: parseFloat(weightInKg.toFixed(2)),
+        patientWeight: values.patientWeight,
         dosageGuidelines: values.dosageGuidelines,
         syrupConcentration: values.syrupConcentration,
       };
@@ -141,6 +139,20 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="patientWeight"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>وزن بیمار (کیلوگرم)</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder="مثلاً ۱۲.۵" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             
             <FormField
               control={form.control}
@@ -165,39 +177,6 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                   <FormDescription>
                     غلظت ماده موثره در شربت را انتخاب کنید.
                   </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="patientWeight"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>وزن بیمار</FormLabel>
-                  <div className="flex gap-2">
-                    <FormControl>
-                      <Input type="number" placeholder="مثلاً ۷۰" {...field} />
-                    </FormControl>
-                    <FormField
-                      control={form.control}
-                      name="patientWeightUnit"
-                      render={({ field: unitField }) => (
-                        <Select onValueChange={unitField.onChange} defaultValue={unitField.value}>
-                          <FormControl>
-                            <SelectTrigger className="w-[80px]">
-                              <SelectValue placeholder="واحد" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="kg">کیلوگرم</SelectItem>
-                            <SelectItem value="lbs">پوند</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      )}
-                    />
-                  </div>
                   <FormMessage />
                 </FormItem>
               )}

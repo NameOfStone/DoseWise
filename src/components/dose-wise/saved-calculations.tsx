@@ -35,7 +35,7 @@ export function SavedCalculations({ savedCalculations, onLoad, onDelete }: Saved
                 <AccordionContent>
                   <div className="space-y-4">
                     <div className="flex items-center gap-2 text-sm"><Pill className="h-4 w-4 text-primary" /> {calc.inputs.medicineName}</div>
-                    <div className="flex items-center gap-2 text-sm"><Scale className="h-4 w-4 text-primary" /> {calc.inputs.patientWeight} {calc.inputs.patientWeightUnit}</div>
+                    <div className="flex items-center gap-2 text-sm"><Scale className="h-4 w-4 text-primary" /> {calc.inputs.patientWeight} کیلوگرم</div>
                     <p className="text-sm text-muted-foreground">{calc.inputs.dosageGuidelines}</p>
                     {calc.aiResponse.hasWarning && <p className="text-sm text-destructive">{calc.aiResponse.warningMessage}</p>}
                     <div className="flex gap-2 mt-2">

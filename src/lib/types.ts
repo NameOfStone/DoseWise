@@ -3,11 +3,12 @@ export interface CalculationData {
   patientWeight: number;
   dosageGuidelines: string;
   syrupConcentration: string;
+  disease: string;
+  notes: string;
 }
 
 export interface AIResponse {
-  hasWarning: boolean;
-  warningMessage: string;
+  notes: string;
   calculatedDose: string;
   calculatedVolume: string;
 }

@@ -12,18 +12,20 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import type { CalculationData, CalculationResult } from "@/lib/types";
 import { getInteractionWarning } from "@/ai/flows/interaction-warning";
 import { useState, useEffect } from "react";
-import { Loader2, Pill } from "lucide-react";
+import { Loader2, Pill, Syringe } from "lucide-react";
 import { medicineLibrary } from "@/lib/medicines";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { Check } from "lucide-react";
+import { Check, Stethoscope } from "lucide-react";
 
 const formSchema = z.object({
   medicineName: z.string().min(2, { message: "نام دارو الزامی است." }),
+  syrupConcentration: z.string().min(3, { message: "غلظت شربت الزامی است." }),
+  disease: z.string().min(1, { message: "انتخاب بیماری الزامی است."}),
   patientWeight: z.coerce.number().positive({ message: "وزن باید مثبت باشد." }),
   dosageGuidelines: z.string().min(10, { message: "راهنمای دوز مورد نیاز است." }),
-  syrupConcentration: z.string().min(3, { message: "غلظت شربت الزامی است." }),
+  notes: z.string(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -44,6 +46,8 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
       patientWeight: 0,
       dosageGuidelines: "",
       syrupConcentration: "",
+      disease: "",
+      notes: "",
     },
   });
 
@@ -55,11 +59,31 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
 
   const selectedMedicineName = form.watch("medicineName");
   const selectedMedicine = medicineLibrary.find(med => med.name === selectedMedicineName);
+  const selectedDiseaseName = form.watch("disease");
+  const selectedDisease = selectedMedicine?.diseases.find(d => d.name === selectedDiseaseName);
+
+  useEffect(() => {
+      if (selectedDisease) {
+          form.setValue("dosageGuidelines", selectedDisease.guidelines);
+          form.setValue("notes", selectedDisease.notes);
+      } else {
+          form.setValue("dosageGuidelines", "");
+          form.setValue("notes", "");
+      }
+  }, [selectedDisease, form]);
+
 
   async function onSubmit(values: FormValues) {
     setIsLoading(true);
     try {
-      const aiResponse = await getInteractionWarning(values);
+      const aiResponse = await getInteractionWarning({
+          medicineName: values.medicineName,
+          patientWeight: values.patientWeight,
+          dosageGuidelines: values.dosageGuidelines,
+          syrupConcentration: values.syrupConcentration,
+          disease: values.disease,
+          notes: values.notes,
+      });
       
       onCalculate({
         inputs: values,
@@ -76,7 +100,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardDescription>برای محاسبه دوز و مشاهده هشدارها، جزئیات زیر را وارد کنید.</CardDescription>
+        <CardDescription>برای محاسبه دوز و مشاهده نکات، جزئیات زیر را وارد کنید.</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -109,7 +133,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                     </PopoverTrigger>
                     <PopoverContent className="w-full p-0" align="start">
                       <Command>
-                        <CommandInput placeholder="جستجوی دارو..." onValueChange={(search) => { form.setValue('medicineName', search); }} dir="ltr" />
+                        <CommandInput placeholder="جستجوی دارو..." onValueChange={(search) => { form.setValue('medicineName', search); form.setValue('disease', ''); }} dir="ltr" />
                         <CommandEmpty>دارویی یافت نشد.</CommandEmpty>
                         <CommandGroup>
                           {medicineLibrary.map((med) => (
@@ -120,9 +144,11 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                               dir="ltr"
                               onSelect={() => {
                                 form.setValue("medicineName", med.name);
-                                form.setValue("dosageGuidelines", med.guidelines);
                                 const firstConcentration = med.concentrations[0] || "";
                                 form.setValue("syrupConcentration", firstConcentration);
+                                form.setValue("disease", "");
+                                form.setValue("dosageGuidelines", "");
+                                form.setValue("notes", "");
                                 setPopoverOpen(false);
                               }}
                             >
@@ -145,7 +171,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>غلظت شربت</FormLabel>
-                   <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value} disabled={!selectedMedicine}>
+                   <Select onValueChange={field.onChange} value={field.value} disabled={!selectedMedicine}>
                     <FormControl>
                       <SelectTrigger dir="rtl">
                          <SelectValue 
@@ -156,15 +182,40 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                     </FormControl>
                     <SelectContent dir="rtl">
                       {selectedMedicine?.concentrations.map((concentration) => (
-                        <SelectItem key={concentration} value={concentration}>
+                        <SelectItem key={concentration} value={concentration} className="text-right" dir="rtl">
                           {concentration}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
-                  <FormDescription>
-                    غلظت ماده موثره در شربت را انتخاب کنید.
-                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="disease"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>بیماری</FormLabel>
+                   <Select onValueChange={field.onChange} value={field.value} disabled={!selectedMedicine}>
+                    <FormControl>
+                      <SelectTrigger dir="rtl">
+                         <SelectValue 
+                            placeholder={!selectedMedicine ? "ابتدا یک دارو انتخاب کنید" : "انتخاب بیماری"}
+                            className={cn(!field.value && "text-right")}
+                          />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent dir="rtl">
+                      {selectedMedicine?.diseases.map((disease) => (
+                        <SelectItem key={disease.name} value={disease.name} className="text-right" dir="rtl">
+                          {disease.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
@@ -192,7 +243,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                   <FormLabel>دستورالعمل دوز مصرفی</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="دستورالعمل دوز پس از انتخاب دارو نمایش داده می‌شود."
+                      placeholder="دستورالعمل دوز پس از انتخاب دارو و بیماری نمایش داده می‌شود."
                       className="resize-none"
                       rows={5}
                       {...field}
@@ -200,7 +251,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                     />
                   </FormControl>
                   <FormDescription>
-                    این اطلاعات بر اساس داروی انتخاب شده و از منابع معتبر است.
+                    این اطلاعات بر اساس داروی و بیماری انتخاب شده و از منابع معتبر است.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

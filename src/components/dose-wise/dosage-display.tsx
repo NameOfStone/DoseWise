@@ -3,7 +3,7 @@
 import type { CalculationResult } from "@/lib/types";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertTriangle, CheckCircle2, Pill, Scale, Stethoscope, Beaker, FlaskConical } from "lucide-react";
+import { Info, Pill, Scale, Stethoscope, Beaker, FlaskConical, Activity } from "lucide-react";
 
 interface DosageDisplayProps {
   result: CalculationResult | null;
@@ -47,6 +47,7 @@ export function DosageDisplay({ result }: DosageDisplayProps) {
             <h3 className="font-semibold text-lg">ورودی‌ها</h3>
             <div className="flex items-center gap-2 text-sm"><Pill className="h-4 w-4 text-primary" /> دارو: {inputs.medicineName}</div>
             <div className="flex items-center gap-2 text-sm"><FlaskConical className="h-4 w-4 text-primary" /> غلظت: {toPersianNumerals(inputs.syrupConcentration)}</div>
+            <div className="flex items-center gap-2 text-sm"><Activity className="h-4 w-4 text-primary" /> بیماری: {inputs.disease}</div>
             <div className="flex items-center gap-2 text-sm"><Scale className="h-4 w-4 text-primary" /> وزن بیمار: {toPersianNumerals(inputs.patientWeight)} کیلوگرم</div>
         </div>
         
@@ -55,20 +56,13 @@ export function DosageDisplay({ result }: DosageDisplayProps) {
             <div className="flex items-center gap-2 text-md"><Beaker className="h-5 w-5" /> دوز: {aiResponse.calculatedDose}</div>
             <div className="flex items-center gap-2 text-lg font-bold text-primary"><Beaker className="h-5 w-5" /> حجم: {aiResponse.calculatedVolume}</div>
         </div>
+        
+        <Alert className="bg-accent/50 border-accent">
+          <Info className="h-4 w-4 text-accent-foreground" />
+          <AlertTitle>نکات مهم دارویی</AlertTitle>
+          <AlertDescription>{aiResponse.notes}</AlertDescription>
+        </Alert>
 
-        {aiResponse.hasWarning ? (
-          <Alert variant="destructive">
-            <AlertTriangle className="h-4 w-4" />
-            <AlertTitle>هشدار دارویی!</AlertTitle>
-            <AlertDescription>{aiResponse.warningMessage}</AlertDescription>
-          </Alert>
-        ) : (
-          <Alert className="bg-accent/50 border-accent">
-            <CheckCircle2 className="h-4 w-4 text-accent-foreground" />
-            <AlertTitle>هیچ هشداری یافت نشد</AlertTitle>
-            <AlertDescription>{aiResponse.warningMessage || "بر اساس اطلاعات ارائه شده، هیچ هشدار بالقوه‌ای یافت نشد."}</AlertDescription>
-          </Alert>
-        )}
       </CardContent>
     </Card>
   );

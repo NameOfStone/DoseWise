@@ -67,6 +67,9 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
       if (selectedMedicine.concentrations.length === 1) {
         form.setValue("syrupConcentration", selectedMedicine.concentrations[0]);
       }
+      if (selectedMedicine.diseases.length === 1) {
+        form.setValue("disease", selectedMedicine.diseases[0].name);
+      }
     }
   }, [selectedMedicine, form]);
 
@@ -152,11 +155,12 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                               dir="ltr"
                               onSelect={() => {
                                 form.setValue("medicineName", med.name);
-                                // This logic is now handled by the useEffect hook
                                 if (med.concentrations.length !== 1) {
                                   form.setValue("syrupConcentration", "");
                                 }
-                                form.setValue("disease", "");
+                                if (med.diseases.length !== 1) {
+                                  form.setValue("disease", "");
+                                }
                                 form.setValue("dosageGuidelines", "");
                                 form.setValue("notes", "");
                                 setPopoverOpen(false);
@@ -209,7 +213,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>بیماری</FormLabel>
-                   <Select onValueChange={field.onChange} value={field.value} disabled={!selectedMedicine}>
+                   <Select onValueChange={field.onChange} value={field.value} disabled={!selectedMedicine || selectedMedicine.diseases.length <= 1}>
                     <FormControl>
                       <SelectTrigger dir="rtl">
                          <SelectValue 

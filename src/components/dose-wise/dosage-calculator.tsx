@@ -170,9 +170,9 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                         <SelectValue placeholder="ابتدا یک دارو انتخاب کنید" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent>
+                    <SelectContent className="text-right">
                       {selectedMedicine?.concentrations.map((concentration) => (
-                        <SelectItem key={concentration} value={concentration} className="text-right">
+                        <SelectItem key={concentration} value={concentration}>
                           {concentration}
                         </SelectItem>
                       ))}

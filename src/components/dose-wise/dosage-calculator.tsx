@@ -144,6 +144,34 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
             
             <FormField
               control={form.control}
+              name="syrupConcentration"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>غلظت شربت</FormLabel>
+                   <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value} disabled={!selectedMedicine}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="ابتدا یک دارو انتخاب کنید" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {selectedMedicine?.concentrations.map((concentration) => (
+                        <SelectItem key={concentration} value={concentration}>
+                          {concentration}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>
+                    غلظت ماده موثره در شربت را انتخاب کنید.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
               name="patientWeight"
               render={({ field }) => (
                 <FormItem>
@@ -174,51 +202,23 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                 </FormItem>
               )}
             />
-
-            <FormField
-              control={form.control}
-              name="syrupConcentration"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>غلظت شربت</FormLabel>
-                   <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value} disabled={!selectedMedicine}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="ابتدا یک دارو انتخاب کنید" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {selectedMedicine?.concentrations.map((concentration) => (
-                        <SelectItem key={concentration} value={concentration}>
-                          {concentration}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormDescription>
-                    غلظت ماده موثره در شربت را انتخاب کنید.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             
             <FormField
               control={form.control}
               name="dosageGuidelines"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>راهنمای دوز</FormLabel>
+                  <FormLabel>دستورالعمل دوز مصرفی</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="مثلاً ۱۰-۱۵ میلی‌گرم بر کیلوگرم در هر دوز..."
+                      placeholder="مثلاً: ۱۰-۱۵ میلی‌گرم به ازای هر کیلوگرم وزن بدن در هر نوبت مصرف..."
                       className="resize-none"
                       rows={5}
                       {...field}
                     />
                   </FormControl>
                   <FormDescription>
-                    راهنمای دوز دارو را وارد کنید.
+                    دستورالعمل دوز مصرفی دارو را وارد کنید. این اطلاعات معمولاً روی بسته‌بندی دارو موجود است.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

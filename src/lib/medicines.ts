@@ -1,22 +1,22 @@
 export const medicineLibrary = [
   {
     name: "Acetaminophen",
-    guidelines: "10-15 mg/kg per dose every 4-6 hours. Do not exceed 5 doses in 24 hours.",
+    guidelines: "۱۰ تا ۱۵ میلی‌گرم به ازای هر کیلوگرم وزن بدن در هر نوبت، هر ۴ تا ۶ ساعت. بیش از ۵ نوبت در ۲۴ ساعت مصرف نشود.",
     concentrations: ["160 mg / 5 ml"],
   },
   {
     name: "Ibuprofen",
-    guidelines: "5-10 mg/kg per dose every 6-8 hours. Maximum daily dose is 40 mg/kg.",
+    guidelines: "۵ تا ۱۰ میلی‌گرم به ازای هر کیلوگرم وزن بدن در هر نوبت، هر ۶ تا ۸ ساعت. حداکثر دوز روزانه ۴۰ میلی‌گرم به ازای هر کیلوگرم است.",
     concentrations: ["100 mg / 5 ml"],
   },
   {
     name: "Amoxicillin",
-    guidelines: "For mild-moderate infections: 25-50 mg/kg/day in divided doses every 8-12 hours. For severe infections: 80-90 mg/kg/day in divided doses every 8-12 hours.",
+    guidelines: "عفونت‌های خفیف تا متوسط: ۲۵-۵۰ میلی‌گرم/کیلوگرم/روز در دوزهای منقسم هر ۸-۱۲ ساعت. عفونت‌های شدید: ۸۰-۹۰ میلی‌گرم/کیلوگرم/روز در دوزهای منقسم هر ۸-۱۲ ساعت.",
     concentrations: ["125 mg / 5 ml", "200 mg / 5 ml", "250 mg / 5 ml", "400 mg / 5 ml"],
   },
   {
     name: "Cetirizine",
-    guidelines: "For children 2-5 years: 2.5 mg once daily. For children >6 years and adults: 5-10 mg once daily.",
+    guidelines: "کودکان ۲ تا ۵ سال: ۲.۵ میلی‌گرم یک بار در روز. کودکان بالای ۶ سال و بزرگسالان: ۵ تا ۱۰ میلی‌گرم یک بار در روز.",
     concentrations: ["5 mg / 5 ml"],
   },
 ];

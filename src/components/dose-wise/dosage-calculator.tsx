@@ -20,10 +20,10 @@ import { cn } from "@/lib/utils";
 import { Check } from "lucide-react";
 
 const formSchema = z.object({
-  medicineName: z.string().min(2, { message: "Medicine name is required." }),
-  patientWeight: z.coerce.number().positive({ message: "Weight must be positive." }),
+  medicineName: z.string().min(2, { message: "نام دارو الزامی است." }),
+  patientWeight: z.coerce.number().positive({ message: "وزن باید مثبت باشد." }),
   patientWeightUnit: z.enum(["kg", "lbs"]),
-  dosageGuidelines: z.string().min(10, { message: "Dosage guidelines are required." }),
+  dosageGuidelines: z.string().min(10, { message: "راهنمای دوز مورد نیاز است." }),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -80,8 +80,8 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle>Dosage Calculator</CardTitle>
-        <CardDescription>Enter the details below to check for dosage and warnings.</CardDescription>
+        <CardTitle>محاسبه‌گر دوز</CardTitle>
+        <CardDescription>برای بررسی دوز و هشدارها، جزئیات زیر را وارد کنید.</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -91,7 +91,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
               name="medicineName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Medicine Name</FormLabel>
+                  <FormLabel>نام دارو</FormLabel>
                   <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
                     <PopoverTrigger asChild>
                       <FormControl>
@@ -102,15 +102,15 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                         >
                           {field.value
                             ? medicineLibrary.find((med) => med.name === field.value)?.name
-                            : "Select medicine"}
+                            : "انتخاب دارو"}
                           <Pill className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
                     <PopoverContent className="w-full p-0" align="start">
                       <Command>
-                        <CommandInput placeholder="Search medicine..." onValueChange={(search) => { form.setValue('medicineName', search); }} />
-                        <CommandEmpty>No medicine found.</CommandEmpty>
+                        <CommandInput placeholder="جستجوی دارو..." onValueChange={(search) => { form.setValue('medicineName', search); }} />
+                        <CommandEmpty>دارویی یافت نشد.</CommandEmpty>
                         <CommandGroup>
                           {medicineLibrary.map((med) => (
                             <CommandItem
@@ -140,10 +140,10 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
               name="patientWeight"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Patient Weight</FormLabel>
+                  <FormLabel>وزن بیمار</FormLabel>
                   <div className="flex gap-2">
                     <FormControl>
-                      <Input type="number" placeholder="e.g., 70" {...field} />
+                      <Input type="number" placeholder="مثلاً ۷۰" {...field} />
                     </FormControl>
                     <FormField
                       control={form.control}
@@ -152,12 +152,12 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                         <Select onValueChange={unitField.onChange} defaultValue={unitField.value}>
                           <FormControl>
                             <SelectTrigger className="w-[80px]">
-                              <SelectValue placeholder="Unit" />
+                              <SelectValue placeholder="واحد" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="kg">kg</SelectItem>
-                            <SelectItem value="lbs">lbs</SelectItem>
+                            <SelectItem value="kg">کیلوگرم</SelectItem>
+                            <SelectItem value="lbs">پوند</SelectItem>
                           </SelectContent>
                         </Select>
                       )}
@@ -172,17 +172,17 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
               name="dosageGuidelines"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Dosage Guidelines</FormLabel>
+                  <FormLabel>راهنمای دوز</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="e.g., 10-15 mg/kg per dose..."
+                      placeholder="مثلاً ۱۰-۱۵ میلی‌گرم بر کیلوگرم در هر دوز..."
                       className="resize-none"
                       rows={5}
                       {...field}
                     />
                   </FormControl>
                   <FormDescription>
-                    Enter the dosage guidelines for the medicine.
+                    راهنمای دوز دارو را وارد کنید.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -190,7 +190,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
             />
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-              Calculate Dosage
+              محاسبه دوز
             </Button>
           </form>
         </Form>

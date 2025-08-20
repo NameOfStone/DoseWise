@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { AlertTriangle, History, Pill, Scale, Trash2 } from "lucide-react";
 import { format } from "date-fns";
+import { faIR } from "date-fns/locale";
 
 interface SavedCalculationsProps {
   savedCalculations: SavedCalculation[];
@@ -17,8 +18,8 @@ export function SavedCalculations({ savedCalculations, onLoad, onDelete }: Saved
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Saved Calculations</CardTitle>
-        <CardDescription>Review your past calculations.</CardDescription>
+        <CardTitle>محاسبات ذخیره شده</CardTitle>
+        <CardDescription>محاسبات گذشته خود را مرور کنید.</CardDescription>
       </CardHeader>
       <CardContent>
         {savedCalculations.length > 0 ? (
@@ -28,7 +29,7 @@ export function SavedCalculations({ savedCalculations, onLoad, onDelete }: Saved
                 <AccordionTrigger>
                   <div className="flex items-center gap-2">
                     {calc.aiResponse.hasWarning && <AlertTriangle className="h-4 w-4 text-destructive" />}
-                    <span>{calc.inputs.medicineName} - {format(new Date(calc.createdAt), "PPp")}</span>
+                    <span>{calc.inputs.medicineName} - {format(new Date(calc.createdAt), "PPp", { locale: faIR })}</span>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent>
@@ -38,7 +39,7 @@ export function SavedCalculations({ savedCalculations, onLoad, onDelete }: Saved
                     <p className="text-sm text-muted-foreground">{calc.inputs.dosageGuidelines}</p>
                     {calc.aiResponse.hasWarning && <p className="text-sm text-destructive">{calc.aiResponse.warningMessage}</p>}
                     <div className="flex gap-2 mt-2">
-                      <Button variant="outline" size="sm" onClick={() => onLoad(calc)}>Load</Button>
+                      <Button variant="outline" size="sm" onClick={() => onLoad(calc)}>بارگیری</Button>
                       <Button variant="destructive" size="sm" onClick={() => onDelete(calc.id)}><Trash2 className="h-4 w-4" /></Button>
                     </div>
                   </div>
@@ -49,7 +50,7 @@ export function SavedCalculations({ savedCalculations, onLoad, onDelete }: Saved
         ) : (
           <div className="text-center text-muted-foreground py-8">
             <History className="mx-auto h-12 w-12" />
-            <p>No saved calculations yet.</p>
+            <p>هنوز محاسبه ذخیره شده‌ای وجود ندارد.</p>
           </div>
         )}
       </CardContent>

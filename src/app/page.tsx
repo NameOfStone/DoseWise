@@ -28,8 +28,8 @@ export default function Home() {
     };
     setSavedCalculations([newSavedCalculation, ...savedCalculations]);
     toast({
-      title: "Calculation Saved",
-      description: `Saved calculation for ${resultToSave.inputs.medicineName}.`,
+      title: "محاسبه ذخیره شد",
+      description: `محاسبه برای ${resultToSave.inputs.medicineName} ذخیره شد.`,
       className: "bg-accent border-accent-foreground text-accent-foreground",
     });
   };
@@ -38,15 +38,15 @@ export default function Home() {
     setCurrentResult(result);
     setLoadedData(result.inputs);
     toast({
-      title: "Calculation Loaded",
-      description: `Loaded calculation for ${result.inputs.medicineName}.`,
+      title: "محاسبه بارگیری شد",
+      description: `محاسبه برای ${result.inputs.medicineName} بارگیری شد.`,
     });
   };
 
   const handleDeleteCalculation = (id: string) => {
     setSavedCalculations(savedCalculations.filter((calc) => calc.id !== id));
     toast({
-      title: "Calculation Deleted",
+      title: "محاسبه حذف شد",
       variant: "destructive",
     });
   };
@@ -65,10 +65,10 @@ export default function Home() {
       <header className="text-center mb-8">
         <div className="flex justify-center items-center gap-4 mb-2">
             <Stethoscope className="w-12 h-12 text-primary" />
-            <h1 className="text-4xl md:text-5xl font-bold font-headline">DoseWise</h1>
+            <h1 className="text-4xl md:text-5xl font-bold font-headline">دوز هوشمند</h1>
         </div>
         <p className="text-muted-foreground text-lg">
-          An intelligent medicine dosage calculator with interaction warnings.
+          یک حسابگر هوشمند دوز دارو با هشدارهای تداخل دارویی.
         </p>
       </header>
 

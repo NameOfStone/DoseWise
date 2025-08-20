@@ -17,13 +17,13 @@ export function DosageDisplay({ result, onSave, isSaved }: DosageDisplayProps) {
     return (
       <Card className="h-full">
         <CardHeader>
-          <CardTitle>Results</CardTitle>
-          <CardDescription>Your calculation results will appear here.</CardDescription>
+          <CardTitle>نتایج</CardTitle>
+          <CardDescription>نتایج محاسبه شما در اینجا نمایش داده می‌شود.</CardDescription>
         </CardHeader>
         <CardContent className="flex items-center justify-center h-full text-muted-foreground min-h-[200px]">
           <div className="text-center">
             <Stethoscope className="mx-auto h-12 w-12" />
-            <p>Awaiting calculation...</p>
+            <p>در انتظار محاسبه...</p>
           </div>
         </CardContent>
       </Card>
@@ -35,38 +35,38 @@ export function DosageDisplay({ result, onSave, isSaved }: DosageDisplayProps) {
   return (
     <Card className="h-full flex flex-col">
       <CardHeader>
-        <CardTitle>Calculation Result</CardTitle>
-        <CardDescription>Based on the information provided.</CardDescription>
+        <CardTitle>نتیجه محاسبه</CardTitle>
+        <CardDescription>بر اساس اطلاعات ارائه شده.</CardDescription>
       </CardHeader>
       <CardContent className="flex-grow space-y-4">
         <div className="space-y-2">
-            <h3 className="font-semibold text-lg">Inputs</h3>
-            <div className="flex items-center gap-2 text-sm"><Pill className="h-4 w-4 text-primary" /> Medicine: {inputs.medicineName}</div>
-            <div className="flex items-center gap-2 text-sm"><Scale className="h-4 w-4 text-primary" /> Patient Weight: {inputs.patientWeight} {inputs.patientWeightUnit}</div>
+            <h3 className="font-semibold text-lg">ورودی‌ها</h3>
+            <div className="flex items-center gap-2 text-sm"><Pill className="h-4 w-4 text-primary" /> دارو: {inputs.medicineName}</div>
+            <div className="flex items-center gap-2 text-sm"><Scale className="h-4 w-4 text-primary" /> وزن بیمار: {inputs.patientWeight} {inputs.patientWeightUnit}</div>
         </div>
         
         <div className="space-y-2">
-            <h3 className="font-semibold text-lg">Dosage</h3>
+            <h3 className="font-semibold text-lg">دوز</h3>
             <div className="flex items-center gap-2 text-lg font-bold text-primary"><Beaker className="h-5 w-5" /> {aiResponse.calculatedDose}</div>
         </div>
 
         {aiResponse.hasWarning ? (
           <Alert variant="destructive">
             <AlertTriangle className="h-4 w-4" />
-            <AlertTitle>Interaction Warning!</AlertTitle>
+            <AlertTitle>هشدار تداخل دارویی!</AlertTitle>
             <AlertDescription>{aiResponse.warningMessage}</AlertDescription>
           </Alert>
         ) : (
           <Alert className="bg-accent/50 border-accent">
             <CheckCircle2 className="h-4 w-4 text-accent-foreground" />
-            <AlertTitle>No Warnings Detected</AlertTitle>
-            <AlertDescription>{aiResponse.warningMessage || "No potential interactions or warnings were found based on the provided information."}</AlertDescription>
+            <AlertTitle>هیچ هشداری یافت نشد</AlertTitle>
+            <AlertDescription>{aiResponse.warningMessage || "بر اساس اطلاعات ارائه شده، هیچ تداخل یا هشدار بالقوه‌ای یافت نشد."}</AlertDescription>
           </Alert>
         )}
       </CardContent>
       <CardFooter>
         <Button onClick={() => onSave(result)} disabled={isSaved(result)} className="w-full">
-          {isSaved(result) ? "Calculation Saved" : "Save Calculation"}
+          {isSaved(result) ? "محاسبه ذخیره شد" : "ذخیره محاسبه"}
         </Button>
       </CardFooter>
     </Card>

@@ -138,20 +138,6 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                 </FormItem>
               )}
             />
-
-            <FormField
-              control={form.control}
-              name="patientWeight"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>وزن بیمار (کیلوگرم)</FormLabel>
-                  <FormControl>
-                    <Input type="number" dir="ltr" placeholder="مثلاً ۱۲.۵" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             
             <FormField
               control={form.control}
@@ -179,6 +165,20 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                   <FormDescription>
                     غلظت ماده موثره در شربت را انتخاب کنید.
                   </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="patientWeight"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>وزن بیمار (کیلوگرم)</FormLabel>
+                  <FormControl>
+                    <Input type="number" dir="ltr" placeholder="مثلاً ۱۲.۵" {...field} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

@@ -172,7 +172,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                     </FormControl>
                     <SelectContent>
                       {selectedMedicine?.concentrations.map((concentration) => (
-                        <SelectItem key={concentration} value={concentration}>
+                        <SelectItem key={concentration} value={concentration} className="text-right">
                           {concentration}
                         </SelectItem>
                       ))}

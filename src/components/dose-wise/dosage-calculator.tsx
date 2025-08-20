@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import type { CalculationData, CalculationResult, Unit } from "@/lib/types";
+import type { CalculationData, CalculationResult } from "@/lib/types";
 import { checkInteractionWarning } from "@/ai/flows/interaction-warning";
 import { useState } from "react";
 import { Loader2, Pill } from "lucide-react";
@@ -47,8 +47,11 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
       dosageGuidelines: "",
       syrupConcentration: "",
     },
-    values: loadData, // Use values to sync with parent state
+    values: loadData,
   });
+
+  const selectedMedicineName = form.watch("medicineName");
+  const selectedMedicine = medicineLibrary.find(med => med.name === selectedMedicineName);
 
   async function onSubmit(values: FormValues) {
     setIsLoading(true);
@@ -74,7 +77,6 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
 
     } catch (error) {
       console.error("Calculation error:", error);
-      // Here you would use a toast to show the error
     } finally {
       setIsLoading(false);
     }
@@ -122,7 +124,8 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                               onSelect={() => {
                                 form.setValue("medicineName", med.name);
                                 form.setValue("dosageGuidelines", med.guidelines);
-                                form.setValue("syrupConcentration", med.concentration || "");
+                                const firstConcentration = med.concentrations[0] || "";
+                                form.setValue("syrupConcentration", firstConcentration);
                                 setPopoverOpen(false);
                               }}
                             >
@@ -171,22 +174,35 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="syrupConcentration"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>غلظت شربت</FormLabel>
-                  <FormControl>
-                    <Input placeholder="مثلا 100 mg / 5 ml" {...field} />
-                  </FormControl>
+                   <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value} disabled={!selectedMedicine}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="ابتدا یک دارو انتخاب کنید" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {selectedMedicine?.concentrations.map((concentration) => (
+                        <SelectItem key={concentration} value={concentration}>
+                          {concentration}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormDescription>
-                    غلظت ماده موثره در شربت را وارد کنید.
+                    غلظت ماده موثره در شربت را انتخاب کنید.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
+            
             <FormField
               control={form.control}
               name="dosageGuidelines"

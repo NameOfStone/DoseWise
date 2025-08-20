@@ -23,10 +23,14 @@ const formSchema = z.object({
   medicineName: z.string().min(2, { message: "نام دارو الزامی است." }),
   syrupConcentration: z.string().min(3, { message: "غلظت شربت الزامی است." }),
   disease: z.string().min(1, { message: "انتخاب بیماری الزامی است."}),
-  patientWeight: z.coerce.number().positive({ message: "وزن باید مثبت باشد." }),
-  dosageGuidelines: z.string().min(10, { message: "راهنمای دوز مورد نیاز است." }),
+  patientWeight: z.union([z.coerce.number().positive({ message: "وزن باید مثبت باشد." }), z.literal("")]),
+  dosageGuidelines: z.string().min(1, { message: "راهنمای دوز مورد نیاز است." }),
   notes: z.string(),
+}).refine(data => data.patientWeight !== "", {
+    message: "وزن بیمار الزامی است.",
+    path: ["patientWeight"],
 });
+
 
 type FormValues = z.infer<typeof formSchema>;
 
@@ -49,7 +53,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
     resolver: zodResolver(formSchema),
     defaultValues: {
       medicineName: "",
-      patientWeight: 0,
+      patientWeight: "",
       dosageGuidelines: "",
       syrupConcentration: "",
       disease: "",
@@ -100,11 +104,13 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
 
 
   async function onSubmit(values: FormValues) {
+    if (values.patientWeight === "") return;
+
     setIsLoading(true);
     try {
       const aiResponse = await getInteractionWarning({
           medicineName: values.medicineName,
-          patientWeight: values.patientWeight,
+          patientWeight: values.patientWeight as number,
           dosageGuidelines: values.dosageGuidelines,
           syrupConcentration: values.syrupConcentration,
           disease: values.disease,
@@ -112,7 +118,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
       });
       
       onCalculate({
-        inputs: values,
+        inputs: { ...values, patientWeight: values.patientWeight as number },
         aiResponse,
       });
 
@@ -123,6 +129,10 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
     }
   }
   
+  const toEnglishNumerals = (str: string) => {
+    return str.replace(/[۰-۹]/g, d => String.fromCharCode(d.charCodeAt(0) - 1728));
+  }
+
   return (
     <Card className="h-full">
       <CardHeader>
@@ -251,7 +261,19 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                 <FormItem>
                   <FormLabel>وزن بیمار (کیلوگرم)</FormLabel>
                   <FormControl>
-                    <Input type="number" step="0.1" dir="ltr" placeholder="مثلاً 12.5" {...field} />
+                    <Input
+                      type="text"
+                      dir="rtl"
+                      placeholder="مثلاً ۱۲.۵"
+                      {...field}
+                      value={toPersianNumerals(field.value)}
+                      onChange={(e) => {
+                         const englishValue = toEnglishNumerals(e.target.value);
+                         if (!isNaN(Number(englishValue)) || englishValue === "" || englishValue === ".") {
+                            form.setValue("patientWeight", englishValue);
+                         }
+                      }}
+                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

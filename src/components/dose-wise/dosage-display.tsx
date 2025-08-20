@@ -13,7 +13,7 @@ const toPersianNumerals = (text: string | number) => {
     if (text === null || text === undefined) return "";
     const persianNumerals = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
     return String(text).replace(/[0-9.-]/g, (w) => {
-        if (w === '.') return ',';
+        if (w === '.') return '٫';
         if (w === '-') return '-';
         return persianNumerals[+w];
     });
@@ -64,7 +64,7 @@ export function DosageDisplay({ result }: DosageDisplayProps) {
         <Alert className="bg-accent/50 border-accent">
           <Info className="h-4 w-4 text-accent-foreground" />
           <AlertTitle>نکات مهم دارویی</AlertTitle>
-          <AlertDescription>{aiResponse.notes}</AlertDescription>
+          <AlertDescription>{toPersianNumerals(aiResponse.notes)}</AlertDescription>
         </Alert>
 
       </CardContent>

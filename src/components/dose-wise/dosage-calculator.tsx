@@ -35,6 +35,16 @@ interface DosageCalculatorProps {
   loadData?: CalculationData | null;
 }
 
+const toPersianNumerals = (text: string | number) => {
+    if (text === null || text === undefined) return "";
+    const persianNumerals = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+    return String(text).replace(/[0-9.-]/g, (w) => {
+        if (w === '.') return '٫';
+        if (w === '-') return '-';
+        return persianNumerals[+w];
+    });
+};
+
 export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [popoverOpen, setPopoverOpen] = useState(false);
@@ -66,12 +76,17 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
     if (selectedMedicine) {
       if (selectedMedicine.concentrations.length === 1) {
         form.setValue("syrupConcentration", selectedMedicine.concentrations[0]);
+      } else {
+        form.setValue("syrupConcentration", "");
       }
+
       if (selectedMedicine.diseases.length === 1) {
         form.setValue("disease", selectedMedicine.diseases[0].name);
+      } else {
+        form.setValue("disease", "");
       }
     }
-  }, [selectedMedicine, form]);
+  }, [selectedMedicineName, form]);
 
   useEffect(() => {
       if (selectedDisease) {
@@ -144,7 +159,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                     </PopoverTrigger>
                     <PopoverContent className="w-full p-0" align="start">
                       <Command>
-                        <CommandInput placeholder="جستجوی دارو..." onValueChange={(search) => { form.setValue('medicineName', search, { shouldValidate: true }); form.setValue('disease', ''); }} dir="ltr" />
+                        <CommandInput placeholder="جستجوی دارو..." onValueChange={(search) => { form.setValue('medicineName', search, { shouldValidate: true }); }} dir="ltr" />
                         <CommandEmpty>دارویی یافت نشد.</CommandEmpty>
                         <CommandGroup>
                           {medicineLibrary.map((med) => (
@@ -155,14 +170,6 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                               dir="ltr"
                               onSelect={() => {
                                 form.setValue("medicineName", med.name);
-                                if (med.concentrations.length !== 1) {
-                                  form.setValue("syrupConcentration", "");
-                                }
-                                if (med.diseases.length !== 1) {
-                                  form.setValue("disease", "");
-                                }
-                                form.setValue("dosageGuidelines", "");
-                                form.setValue("notes", "");
                                 setPopoverOpen(false);
                               }}
                             >
@@ -242,7 +249,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                 <FormItem>
                   <FormLabel>وزن بیمار (کیلوگرم)</FormLabel>
                   <FormControl>
-                    <Input type="number" dir="ltr" placeholder="مثلاً ۱۲.۵" {...field} />
+                    <Input type="number" step="0.1" dir="ltr" placeholder="مثلاً ۱۲.۵" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -261,6 +268,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                       className="resize-none"
                       rows={5}
                       {...field}
+                      value={toPersianNumerals(field.value)}
                       readOnly
                     />
                   </FormControl>

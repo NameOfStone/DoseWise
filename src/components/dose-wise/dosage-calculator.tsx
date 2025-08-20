@@ -37,8 +37,7 @@ interface DosageCalculatorProps {
 
 const toPersianNumerals = (text: string | number) => {
     if (text === null || text === undefined) return "";
-    const persianNumerals = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
-    return String(text).replace(/[0-9]/g, (w) => persianNumerals[+w]);
+    return String(text).replace(/[0-9]/g, (w) => "۰۱۲۳۴۵۶۷۸۹"[+w]);
 };
 
 
@@ -199,13 +198,15 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                          <SelectValue 
                             placeholder={!selectedMedicine ? "ابتدا یک دارو انتخاب کنید" : ""}
                             className={cn(!field.value && "text-right")}
-                          />
+                          >
+                            {toPersianNumerals(field.value)}
+                         </SelectValue>
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent dir="rtl">
                       {selectedMedicine?.concentrations.map((concentration) => (
                         <SelectItem key={concentration} value={concentration} className="text-right" dir="rtl">
-                          {concentration}
+                          {toPersianNumerals(concentration)}
                         </SelectItem>
                       ))}
                     </SelectContent>

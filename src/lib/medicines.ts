@@ -203,7 +203,7 @@ export const medicineLibrary = [
     ]
   },
   {
-    name: "Co-trimoxazole (Trimethoprim-Sulfamethoxazole)",
+    name: "Trimethoprim-Sulfamethoxazole (Co-trimoxazole)",
     concentrations: ["240 میلی‌گرم در 5 میلی‌لیتر (40 تری‌متوپریم و 200 سولفامتوکسازول)"],
     diseases: [
         {

@@ -46,8 +46,8 @@ export function DosageDisplay({ result }: DosageDisplayProps) {
         <div className="space-y-2">
             <h3 className="font-semibold text-lg">ورودی‌ها</h3>
             <div className="flex items-center gap-2 text-sm"><Pill className="h-4 w-4 text-primary" /> دارو: {inputs.medicineName}</div>
-            <div className="flex items-center gap-2 text-sm"><Scale className="h-4 w-4 text-primary" /> وزن بیمار: {toPersianNumerals(inputs.patientWeight)} کیلوگرم</div>
             <div className="flex items-center gap-2 text-sm"><FlaskConical className="h-4 w-4 text-primary" /> غلظت: {toPersianNumerals(inputs.syrupConcentration)}</div>
+            <div className="flex items-center gap-2 text-sm"><Scale className="h-4 w-4 text-primary" /> وزن بیمار: {toPersianNumerals(inputs.patientWeight)} کیلوگرم</div>
         </div>
         
         <div className="space-y-2">

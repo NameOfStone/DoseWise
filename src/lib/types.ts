@@ -5,7 +5,7 @@ export interface CalculationData {
   syrupConcentration: string;
 }
 
-export interface OfflineCalculationOutput {
+export interface AIResponse {
   hasWarning: boolean;
   warningMessage: string;
   calculatedDose: string;
@@ -14,5 +14,5 @@ export interface OfflineCalculationOutput {
 
 export interface CalculationResult {
   inputs: CalculationData;
-  aiResponse: OfflineCalculationOutput;
+  aiResponse: AIResponse;
 }

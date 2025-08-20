@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { CalculationData, CalculationResult } from "@/lib/types";
-import { calculateOffline } from "@/lib/medicines";
+import { getInteractionWarning } from "@/ai/flows/interaction-warning";
 import { useState, useEffect } from "react";
 import { Loader2, Pill } from "lucide-react";
 import { medicineLibrary } from "@/lib/medicines";
@@ -58,18 +58,16 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
 
   async function onSubmit(values: FormValues) {
     setIsLoading(true);
-    // Simulate a short delay for user feedback
-    await new Promise(resolve => setTimeout(resolve, 300));
     try {
-      const calculationResult = calculateOffline(values);
+      const aiResponse = await getInteractionWarning(values);
       
       onCalculate({
         inputs: values,
-        aiResponse: calculationResult,
+        aiResponse,
       });
 
     } catch (error) {
-      console.error("Calculation error:", error);
+      console.error("AI error:", error);
     } finally {
       setIsLoading(false);
     }
@@ -167,7 +165,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                     </FormControl>
                     <SelectContent dir="rtl">
                       {selectedMedicine?.concentrations.map((concentration) => (
-                        <SelectItem key={concentration} value={concentration}>
+                        <SelectItem key={concentration} value={concentration} dir="rtl" className="text-right">
                           {concentration}
                         </SelectItem>
                       ))}

@@ -46,14 +46,14 @@ export function DosageDisplay({ result }: DosageDisplayProps) {
         <div className="space-y-2">
             <h3 className="font-semibold text-lg">ورودی‌ها</h3>
             <div className="flex items-center gap-2 text-sm"><Pill className="h-4 w-4 text-primary" /> دارو: {inputs.medicineName}</div>
-            <div className="flex items-center gap-2 text-sm"><FlaskConical className="h-4 w-4 text-primary" /> غلظت: {toPersianNumerals(inputs.syrupConcentration)}</div>
             <div className="flex items-center gap-2 text-sm"><Scale className="h-4 w-4 text-primary" /> وزن بیمار: {toPersianNumerals(inputs.patientWeight)} کیلوگرم</div>
+            <div className="flex items-center gap-2 text-sm"><FlaskConical className="h-4 w-4 text-primary" /> غلظت: {toPersianNumerals(inputs.syrupConcentration)}</div>
         </div>
         
         <div className="space-y-2">
             <h3 className="font-semibold text-lg">نتایج محاسبه شده</h3>
-            <div className="flex items-center gap-2 text-md"><Beaker className="h-5 w-5" /> دوز (میلی‌گرم): {aiResponse.calculatedDose}</div>
-            <div className="flex items-center gap-2 text-lg font-bold text-primary"><Beaker className="h-5 w-5" /> حجم (میلی‌لیتر): {aiResponse.calculatedVolume}</div>
+            <div className="flex items-center gap-2 text-md"><Beaker className="h-5 w-5" /> دوز: {aiResponse.calculatedDose}</div>
+            <div className="flex items-center gap-2 text-lg font-bold text-primary"><Beaker className="h-5 w-5" /> حجم: {aiResponse.calculatedVolume}</div>
         </div>
 
         {aiResponse.hasWarning ? (

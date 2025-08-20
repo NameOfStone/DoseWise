@@ -46,9 +46,9 @@ Patient Weight: {{{patientWeight}}} kg
 Dosage Guidelines: {{{dosageGuidelines}}}
 Syrup Concentration: {{{syrupConcentration}}}
 
-Based on this information, first calculate the recommended dose in mg for the patient. The result should be a string and can be a range if the guidelines specify one. For ranges, use the word "الی" instead of a hyphen (e.g., "۱۴۰ الی ۲۱۰ mg"). 
-Then, using the calculated dose and the syrup concentration, calculate the corresponding volume in ml. The result should be a string and can be a range (e.g., "۷ الی ۱۰.۵ ml").
-**Important: All calculated numerical results for dose and volume must be in Persian numerals and rounded to one decimal place.**
+Based on this information, first calculate the recommended dose in mg for the patient. The result should be a string and can be a range if the guidelines specify one. For ranges, use the word "الی" instead of a hyphen (e.g., "۱۴۰ الی ۲۱۰ میلی‌گرم"). 
+Then, using the calculated dose and the syrup concentration, calculate the corresponding volume in ml. The result should be a string and can be a range (e.g., "۷ الی ۱۰.۵ میلی‌لیتر").
+**Important: All calculated numerical results for dose and volume must be in Persian numerals and rounded to one decimal place. The units "میلی‌گرم" and "میلی‌لیتر" must be written out in full and not abbreviated.**
 Also, determine if there are any potential warnings. If there are, set the hasWarning field to true and provide a detailed warning message in Persian. If there are no warnings, set the hasWarning field to false and provide a message confirming no issues were found, also in Persian.
 `,
 });

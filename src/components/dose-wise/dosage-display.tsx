@@ -9,10 +9,12 @@ interface DosageDisplayProps {
   result: CalculationResult | null;
 }
 
-const toPersianNumerals = (num: string | number) => {
-  const persianNumerals = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
-  return String(num).replace(/[0-9]/g, (w) => persianNumerals[+w]);
+const toPersianNumerals = (text: string | number) => {
+    if (text === null || text === undefined) return "";
+    const persianNumerals = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+    return String(text).replace(/[0-9]/g, (w) => persianNumerals[+w]);
 };
+
 
 export function DosageDisplay({ result }: DosageDisplayProps) {
   if (!result) {

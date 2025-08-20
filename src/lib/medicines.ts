@@ -1,7 +1,7 @@
 export const medicineLibrary = [
   {
     name: "Acetaminophen",
-    concentrations: ["۱۶۰ میلی‌گرم در ۵ میلی‌لیتر", "۱۲۰ میلی‌گرم در ۵ میلی‌لیتر"],
+    concentrations: ["۱۰۰ میلی‌گرم در ۱ میلی‌لیتر (قطره)", "۱۲۰ میلی‌گرم در ۵ میلی‌لیتر"],
     diseases: [
         {
             name: "تب و درد عمومی",

@@ -63,6 +63,14 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
   const selectedDisease = selectedMedicine?.diseases.find(d => d.name === selectedDiseaseName);
 
   useEffect(() => {
+    if (selectedMedicine) {
+      if (selectedMedicine.concentrations.length === 1) {
+        form.setValue("syrupConcentration", selectedMedicine.concentrations[0]);
+      }
+    }
+  }, [selectedMedicine, form]);
+
+  useEffect(() => {
       if (selectedDisease) {
           form.setValue("dosageGuidelines", selectedDisease.guidelines);
           form.setValue("notes", selectedDisease.notes);
@@ -133,7 +141,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                     </PopoverTrigger>
                     <PopoverContent className="w-full p-0" align="start">
                       <Command>
-                        <CommandInput placeholder="جستجوی دارو..." onValueChange={(search) => { form.setValue('medicineName', search); form.setValue('disease', ''); }} dir="ltr" />
+                        <CommandInput placeholder="جستجوی دارو..." onValueChange={(search) => { form.setValue('medicineName', search, { shouldValidate: true }); form.setValue('disease', ''); }} dir="ltr" />
                         <CommandEmpty>دارویی یافت نشد.</CommandEmpty>
                         <CommandGroup>
                           {medicineLibrary.map((med) => (
@@ -144,9 +152,8 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                               dir="ltr"
                               onSelect={() => {
                                 form.setValue("medicineName", med.name);
-                                if (med.concentrations.length === 1) {
-                                  form.setValue("syrupConcentration", med.concentrations[0]);
-                                } else {
+                                // This logic is now handled by the useEffect hook
+                                if (med.concentrations.length !== 1) {
                                   form.setValue("syrupConcentration", "");
                                 }
                                 form.setValue("disease", "");
@@ -174,7 +181,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>غلظت شربت</FormLabel>
-                   <Select onValueChange={field.onChange} value={field.value} disabled={!selectedMedicine}>
+                   <Select onValueChange={field.onChange} value={field.value} disabled={!selectedMedicine || selectedMedicine.concentrations.length <= 1}>
                     <FormControl>
                       <SelectTrigger dir="rtl">
                          <SelectValue 

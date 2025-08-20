@@ -15,7 +15,7 @@ const CheckInteractionWarningInputSchema = z.object({
   medicineName: z.string().describe('The name of the medicine.'),
   patientWeight: z.number().describe('The weight of the patient in kilograms.'),
   dosageGuidelines: z.string().describe('The dosage guidelines for the medicine.'),
-  syrupConcentration: z.string().describe('The concentration of the syrup (e.g., "100 mg / 5 ml").'),
+  syrupConcentration: z.string().describe('The concentration of the syrup (e.g., "100 mg در 5 ml").'),
 });
 export type CheckInteractionWarningInput = z.infer<typeof CheckInteractionWarningInputSchema>;
 

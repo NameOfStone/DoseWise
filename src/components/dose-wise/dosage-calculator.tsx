@@ -144,8 +144,11 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                               dir="ltr"
                               onSelect={() => {
                                 form.setValue("medicineName", med.name);
-                                const firstConcentration = med.concentrations[0] || "";
-                                form.setValue("syrupConcentration", firstConcentration);
+                                if (med.concentrations.length === 1) {
+                                  form.setValue("syrupConcentration", med.concentrations[0]);
+                                } else {
+                                  form.setValue("syrupConcentration", "");
+                                }
                                 form.setValue("disease", "");
                                 form.setValue("dosageGuidelines", "");
                                 form.setValue("notes", "");

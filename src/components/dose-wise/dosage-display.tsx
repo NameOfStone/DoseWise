@@ -12,11 +12,7 @@ interface DosageDisplayProps {
 const toPersianNumerals = (text: string | number) => {
     if (text === null || text === undefined) return "";
     const persianNumerals = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
-    return String(text).replace(/[0-9.-]/g, (w) => {
-        if (w === '.') return '٫';
-        if (w === '-') return '-';
-        return persianNumerals[+w];
-    });
+    return String(text).replace(/[0-9]/g, (w) => persianNumerals[+w]);
 };
 
 

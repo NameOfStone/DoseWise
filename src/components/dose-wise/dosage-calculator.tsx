@@ -38,12 +38,9 @@ interface DosageCalculatorProps {
 const toPersianNumerals = (text: string | number) => {
     if (text === null || text === undefined) return "";
     const persianNumerals = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
-    return String(text).replace(/[0-9.-]/g, (w) => {
-        if (w === '.') return '٫';
-        if (w === '-') return '-';
-        return persianNumerals[+w];
-    });
+    return String(text).replace(/[0-9]/g, (w) => persianNumerals[+w]);
 };
+
 
 export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProps) {
   const [isLoading, setIsLoading] = useState(false);
@@ -85,8 +82,12 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
       } else {
         form.setValue("disease", "");
       }
+    } else {
+      form.setValue("syrupConcentration", "");
+      form.setValue("disease", "");
     }
-  }, [selectedMedicineName, form]);
+  }, [selectedMedicine, form]);
+
 
   useEffect(() => {
       if (selectedDisease) {
@@ -159,7 +160,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                     </PopoverTrigger>
                     <PopoverContent className="w-full p-0" align="start">
                       <Command>
-                        <CommandInput placeholder="جستجوی دارو..." onValueChange={(search) => { form.setValue('medicineName', search, { shouldValidate: true }); }} dir="ltr" />
+                        <CommandInput placeholder="جستجوی دارو..." dir="ltr" />
                         <CommandEmpty>دارویی یافت نشد.</CommandEmpty>
                         <CommandGroup>
                           {medicineLibrary.map((med) => (
@@ -249,7 +250,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                 <FormItem>
                   <FormLabel>وزن بیمار (کیلوگرم)</FormLabel>
                   <FormControl>
-                    <Input type="number" step="0.1" dir="ltr" placeholder="مثلاً ۱۲.۵" {...field} />
+                    <Input type="number" step="0.1" dir="ltr" placeholder="مثلاً 12.5" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

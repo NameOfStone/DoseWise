@@ -37,7 +37,7 @@ const interactionWarningPrompt = ai.definePrompt({
   name: 'interactionWarningPrompt',
   input: {schema: CheckInteractionWarningInputSchema},
   output: {schema: CheckInteractionWarningOutputSchema},
-  prompt: `You are a pharmacist specializing in identifying medicine warnings and calculating dosages for syrups.
+  prompt: `You are a pharmacist specializing in identifying medicine warnings and calculating dosages for syrups. Your responses must be in Persian.
 
 You will be provided with the medicine name, patient weight, dosage guidelines, and syrup concentration. You will cross-reference this information against known warnings.
 
@@ -46,10 +46,10 @@ Patient Weight: {{{patientWeight}}} kg
 Dosage Guidelines: {{{dosageGuidelines}}}
 Syrup Concentration: {{{syrupConcentration}}}
 
-Based on this information, first calculate the recommended dose in mg for the patient. The result should be a string and can be a range if the guidelines specify one (e.g., "140-210 mg"). 
-Then, using the calculated dose and the syrup concentration, calculate the corresponding volume in ml. The result should be a string and can be a range (e.g., "7-10.5 ml").
-**Important: All calculated numerical results for dose and volume must be rounded to one decimal place.**
-Also, determine if there are any potential warnings. If there are, set the hasWarning field to true and provide a detailed warning message. If there are no warnings, set the hasWarning field to false and provide a message confirming no issues were found.
+Based on this information, first calculate the recommended dose in mg for the patient. The result should be a string and can be a range if the guidelines specify one (e.g., "۱۴۰-۲۱۰ mg"). 
+Then, using the calculated dose and the syrup concentration, calculate the corresponding volume in ml. The result should be a string and can be a range (e.g., "۷-۱۰.۵ ml").
+**Important: All calculated numerical results for dose and volume must be in Persian numerals and rounded to one decimal place.**
+Also, determine if there are any potential warnings. If there are, set the hasWarning field to true and provide a detailed warning message in Persian. If there are no warnings, set the hasWarning field to false and provide a message confirming no issues were found, also in Persian.
 `,
 });
 

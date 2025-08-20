@@ -103,7 +103,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                           role="combobox"
                           className={cn("w-full justify-between", !field.value && "text-muted-foreground")}
                         >
-                          <span className="text-left flex-1" dir="ltr">
+                          <span className={cn("flex-1", field.value ? "text-left" : "text-right")} dir={field.value ? "ltr" : "rtl"}>
                             {field.value
                               ? medicineLibrary.find((med) => med.name === field.value)?.name
                               : "انتخاب دارو"}

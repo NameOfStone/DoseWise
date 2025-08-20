@@ -11,6 +11,7 @@ export interface AIResponse {
   notes: string;
   calculatedDose: string;
   calculatedVolume: string;
+  frequency: string;
 }
 
 export interface CalculationResult {

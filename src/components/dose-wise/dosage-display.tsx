@@ -53,8 +53,8 @@ export function DosageDisplay({ result }: DosageDisplayProps) {
         
         <div className="space-y-2">
             <h3 className="font-semibold text-lg">نتایج محاسبه شده</h3>
-            <div className="flex items-center gap-2 text-md"><Beaker className="h-5 w-5" /> دوز: {aiResponse.calculatedDose}</div>
-            <div className="flex items-center gap-2 text-lg font-bold text-primary"><Beaker className="h-5 w-5" /> حجم: {aiResponse.calculatedVolume}</div>
+            <div className="flex items-center gap-2 text-md"><Beaker className="h-5 w-5" /> دوز: {aiResponse.calculatedDose} ({toPersianNumerals(aiResponse.frequency)})</div>
+            <div className="flex items-center gap-2 text-lg font-bold text-primary"><Beaker className="h-5 w-5" /> حجم: {aiResponse.calculatedVolume} ({toPersianNumerals(aiResponse.frequency)})</div>
         </div>
         
         <Alert className="bg-accent/50 border-accent">

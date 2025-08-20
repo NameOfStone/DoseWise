@@ -211,14 +211,15 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                   <FormLabel>دستورالعمل دوز مصرفی</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="مثلاً: ۱۰-۱۵ میلی‌گرم به ازای هر کیلوگرم وزن بدن در هر نوبت مصرف..."
+                      placeholder="دستورالعمل دوز پس از انتخاب دارو نمایش داده می‌شود."
                       className="resize-none"
                       rows={5}
                       {...field}
+                      readOnly
                     />
                   </FormControl>
                   <FormDescription>
-                    دستورالعمل دوز مصرفی دارو را وارد کنید. این اطلاعات معمولاً روی بسته‌بندی دارو موجود است.
+                    این اطلاعات بر اساس داروی انتخاب شده و از منابع معتبر است.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

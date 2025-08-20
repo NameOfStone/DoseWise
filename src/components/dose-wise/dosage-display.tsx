@@ -4,7 +4,7 @@ import type { CalculationResult, SavedCalculation } from "@/lib/types";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, CheckCircle2, Pill, Scale, Stethoscope } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Pill, Scale, Stethoscope, Beaker } from "lucide-react";
 
 interface DosageDisplayProps {
   result: CalculationResult | null;
@@ -45,6 +45,11 @@ export function DosageDisplay({ result, onSave, isSaved }: DosageDisplayProps) {
             <div className="flex items-center gap-2 text-sm"><Scale className="h-4 w-4 text-primary" /> Patient Weight: {inputs.patientWeight} {inputs.patientWeightUnit}</div>
         </div>
         
+        <div className="space-y-2">
+            <h3 className="font-semibold text-lg">Dosage</h3>
+            <div className="flex items-center gap-2 text-lg font-bold text-primary"><Beaker className="h-5 w-5" /> {aiResponse.calculatedDose}</div>
+        </div>
+
         {aiResponse.hasWarning ? (
           <Alert variant="destructive">
             <AlertTriangle className="h-4 w-4" />

@@ -3,7 +3,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'دوز هوشمند',
+  title: 'محاسبه‌گر دوز داروی سافیرا',
   description: 'یک حسابگر هوشمند دوز دارو',
 };
 

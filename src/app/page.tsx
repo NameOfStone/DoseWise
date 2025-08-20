@@ -65,7 +65,7 @@ export default function Home() {
       <header className="text-center mb-8">
         <div className="flex justify-center items-center gap-4 mb-2">
             <Stethoscope className="w-12 h-12 text-primary" />
-            <h1 className="text-4xl md:text-5xl font-bold font-headline">دوز هوشمند</h1>
+            <h1 className="text-4xl md:text-5xl font-bold font-headline">محاسبه‌گر دوز داروی سافیرا</h1>
         </div>
         <p className="text-muted-foreground text-lg">
           یک حسابگر هوشمند دوز دارو با هشدارهای تداخل دارویی.

@@ -46,7 +46,7 @@ interface DosageCalculatorProps {
 
 const toPersianNumerals = (text: string | number | undefined | null) => {
     if (text === null || text === undefined) return "";
-    return String(text).replace(/[0-9.]/g, (w) => "۰۱۲۳۴۵۶۷۸۹."[w as any]);
+    return String(text).replace(/[0-9]/g, (w) => "۰۱۲۳۴۵۶۷۸۹"[+w]);
 };
 
 
@@ -166,29 +166,28 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                           role="combobox"
                           className={cn("w-full justify-between", !field.value && "text-muted-foreground")}
                         >
+                          <Pill className="mr-2 h-4 w-4 shrink-0 opacity-50" />
                           <span 
-                            className="flex-1 text-left"
-                            dir="ltr"
+                            className="flex-1 text-right"
                           >
                             {field.value
                               ? medicineLibrary.find((med) => med.name === field.value)?.name
                               : "انتخاب دارو"}
                           </span>
-                          <Pill className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
                     <PopoverContent className="w-full p-0" align="start">
                       <Command>
-                        <CommandInput placeholder="جستجوی دارو..." dir="ltr" />
+                        <CommandInput placeholder="جستجوی دارو..." dir="rtl" />
                         <CommandEmpty>دارویی یافت نشد.</CommandEmpty>
                         <CommandGroup>
                           {medicineLibrary.map((med) => (
                             <CommandItem
                               value={med.name}
                               key={med.name}
-                              className="text-left"
-                              dir="ltr"
+                              className="text-right"
+                              dir="rtl"
                               onSelect={() => {
                                 form.setValue("medicineName", med.name);
                                 form.clearErrors(); // Clear errors to re-evaluate based on new selections
@@ -220,14 +219,14 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                          <SelectValue 
                             placeholder={!selectedMedicine ? "ابتدا یک دارو انتخاب کنید" : "انتخاب غلظت"}
                           >
-                            {formatPersianNumberInput(field.value)}
+                            {toPersianNumerals(field.value)}
                          </SelectValue>
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent dir="rtl">
                       {selectedMedicine?.concentrations.map((concentration) => (
                         <SelectItem key={concentration} value={concentration} className="text-right" dir="rtl">
-                          {formatPersianNumberInput(concentration)}
+                          {toPersianNumerals(concentration)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -305,7 +304,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                       className="resize-none whitespace-pre-wrap"
                       rows={5}
                       {...field}
-                      value={formatPersianNumberInput(field.value)}
+                      value={toPersianNumerals(field.value)}
                       readOnly
                     />
                   </FormControl>

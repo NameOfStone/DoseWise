@@ -12,12 +12,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import type { CalculationData, CalculationResult } from "@/lib/types";
 import { getInteractionWarning } from "@/ai/flows/interaction-warning";
 import { useState, useEffect } from "react";
-import { Loader2, Pill, Syringe } from "lucide-react";
+import { Loader2, Pill } from "lucide-react";
 import { medicineLibrary } from "@/lib/medicines";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import { Check, Stethoscope } from "lucide-react";
+import { cn, toPersianNumerals } from "@/lib/utils";
+import { Check } from "lucide-react";
 
 const formSchema = z.object({
   medicineName: z.string().min(2, { message: "نام دارو الزامی است." }),
@@ -43,12 +43,6 @@ interface DosageCalculatorProps {
   onCalculate: (result: CalculationResult) => void;
   loadData?: CalculationData | null;
 }
-
-const toPersianNumerals = (text: string | number | undefined | null) => {
-    if (text === null || text === undefined) return "";
-    return String(text).replace(/[0-9]/g, (w) => "۰۱۲۳۴۵۶۷۸۹"[+w]);
-};
-
 
 export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProps) {
   const [isLoading, setIsLoading] = useState(false);
@@ -138,12 +132,6 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
     return str.replace(/[۰-۹]/g, d => String.fromCharCode(d.charCodeAt(0) - 1728));
   }
 
-  const formatPersianNumberInput = (value: string | number) => {
-    if (value === null || value === undefined) return "";
-    return String(value).replace(/[0-9]/g, w => "۰۱۲۳۴۵۶۷۸۹"[+w]);
-  };
-
-
   return (
     <Card className="h-full">
       <CardHeader>
@@ -166,7 +154,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                           role="combobox"
                           className={cn("w-full justify-between", !field.value && "text-muted-foreground")}
                         >
-                          <Pill className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+                          <Pill className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                           <span 
                             className="flex-1 text-right"
                           >
@@ -276,7 +264,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                         dir="rtl"
                         placeholder="مثلاً ۱۲.۵"
                         {...field}
-                        value={formatPersianNumberInput(field.value)}
+                        value={toPersianNumerals(field.value)}
                         onChange={(e) => {
                             const englishValue = toEnglishNumerals(e.target.value);
                             // Allow only numbers and a single decimal point

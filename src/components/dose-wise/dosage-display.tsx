@@ -4,17 +4,11 @@ import type { CalculationResult } from "@/lib/types";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Info, Pill, Scale, Stethoscope, Beaker, FlaskConical, Activity } from "lucide-react";
+import { toPersianNumerals } from "@/lib/utils";
 
 interface DosageDisplayProps {
   result: CalculationResult | null;
 }
-
-const toPersianNumerals = (text: string | number | undefined | null) => {
-  if (text === null || text === undefined) return "";
-  const persianNumerals = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
-  return String(text).replace(/[0-9]/g, (w) => persianNumerals[+w]);
-};
-
 
 export function DosageDisplay({ result }: DosageDisplayProps) {
   if (!result) {

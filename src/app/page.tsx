@@ -5,6 +5,7 @@ import { DosageCalculator } from "@/components/dose-wise/dosage-calculator";
 import { DosageDisplay } from "@/components/dose-wise/dosage-display";
 import type { CalculationData, CalculationResult } from "@/lib/types";
 import { Stethoscope } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function Home() {
   const [currentResult, setCurrentResult] = useState<CalculationResult | null>(null);
@@ -17,6 +18,9 @@ export default function Home() {
 
   return (
     <main className="container mx-auto p-4 md:p-8">
+      <div className="absolute top-4 left-4">
+        <ThemeToggle />
+      </div>
       <header className="text-center mb-8">
         <div className="flex justify-center items-center gap-4 mb-2">
             <Stethoscope className="w-12 h-12 text-primary" />

@@ -18,10 +18,9 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  experimental: {
-    // This is required to allow requests from the Firebase Studio preview environment.
-    allowedDevOrigins: ["*.cloudworkstations.dev"],
-  },
+  // This is required to allow requests from the Firebase Studio preview environment.
+  allowedDevOrigins: ["*.cloudworkstations.dev"],
+  experimental: {},
 };
 
 export default nextConfig;

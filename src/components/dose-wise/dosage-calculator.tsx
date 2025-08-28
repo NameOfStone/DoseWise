@@ -16,7 +16,7 @@ import { Loader2, Pill } from "lucide-react";
 import { medicineLibrary } from "@/lib/medicines";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn, toPersianNumerals } from "@/lib/utils";
+import { cn, toPersianNumerals, toEnglishNumerals } from "@/lib/utils";
 import { Check } from "lucide-react";
 
 const formSchema = z.object({
@@ -70,7 +70,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
   const selectedMedicine = medicineLibrary.find(med => med.name === selectedMedicineName);
   const selectedDiseaseName = form.watch("disease");
   const selectedDisease = selectedMedicine?.diseases.find(d => d.name === selectedDiseaseName);
-  const isWeightBased = selectedMedicine?.diseases.some(d => d.guidelines.includes("به ازای هر کیلوگرم"));
+  const isWeightBased = selectedDisease?.guidelines.includes("به ازای هر کیلوگرم");
 
   useEffect(() => {
     if (selectedMedicine) {
@@ -83,7 +83,13 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
       if (selectedMedicine.diseases.length === 1) {
         form.setValue("disease", selectedMedicine.diseases[0].name);
       } else {
-        form.setValue("disease", "");
+        // Find and set the most common disease if available
+        const mostCommonDisease = selectedMedicine.diseases.find(d => d.isMostCommon);
+        if (mostCommonDisease) {
+            form.setValue("disease", mostCommonDisease.name);
+        } else {
+            form.setValue("disease", "");
+        }
       }
     } else {
       form.setValue("syrupConcentration", "");
@@ -125,11 +131,6 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
     } finally {
       setIsLoading(false);
     }
-  }
-  
-  const toEnglishNumerals = (str: string) => {
-    if (!str) return "";
-    return str.replace(/[۰-۹]/g, d => String.fromCharCode(d.charCodeAt(0) - 1728));
   }
 
   return (
@@ -240,7 +241,15 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                     </FormControl>
                     <SelectContent dir="rtl">
                       {selectedMedicine?.diseases.map((disease) => (
-                        <SelectItem key={disease.name} value={disease.name} className="text-right" dir="rtl">
+                        <SelectItem 
+                          key={disease.name} 
+                          value={disease.name} 
+                          className={cn(
+                            "text-right",
+                            disease.isMostCommon && "font-bold text-primary"
+                          )}
+                          dir="rtl"
+                        >
                           {disease.name}
                         </SelectItem>
                       ))}
@@ -250,7 +259,7 @@ export function DosageCalculator({ onCalculate, loadData }: DosageCalculatorProp
                 </FormItem>
               )}
             />
-
+            
             {isWeightBased && (
                 <FormField
                 control={form.control}

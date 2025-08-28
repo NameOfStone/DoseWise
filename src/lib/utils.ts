@@ -10,3 +10,8 @@ export const toPersianNumerals = (text: string | number | undefined | null) => {
   const persianNumerals = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
   return String(text).replace(/[0-9]/g, (w) => persianNumerals[+w]);
 };
+
+export const toEnglishNumerals = (str: string) => {
+  if (!str) return "";
+  return str.replace(/[۰-۹]/g, d => String.fromCharCode(d.charCodeAt(0) - 1728));
+}

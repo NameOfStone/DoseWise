@@ -92,7 +92,7 @@
           - name: Install dependencies
             run: npm install
           - name: Build with Next.js
-            run: next build
+            run: npm run build
           - name: Upload artifact
             uses: actions/upload-pages-artifact@v3
             with:
